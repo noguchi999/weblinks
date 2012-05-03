@@ -27,4 +27,10 @@ describe Weblinks, "instance when it " do
     
     results.size.should eql 43
   end
+  
+  it "method errors should return Array size 4" do
+    results = @weblinks.errors
+    
+    results.size.should eql 4
+  end
 end

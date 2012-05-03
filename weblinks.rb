@@ -36,6 +36,13 @@ class Weblinks
     @app_logs + @app_error_logs
   end
   
+  def errors
+    return @app_error_logs unless @app_error_logs.empty?
+    
+    execute
+    @app_error_logs
+  end
+  
   private
     def execute
       @agent.page.links.each do |link|
