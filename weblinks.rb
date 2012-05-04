@@ -5,7 +5,9 @@ require 'logger'
 class Weblinks
   attr_reader :agent, :url, :before_link, :already_linked, :wrong_url, :exclusion_link
   
-  Mechanize.log = Logger.new(File.dirname(__FILE__) + "/log/access_#{Time.now.to_i}.log")
+  access_log_path = "#{File.dirname(__FILE__)}/log"
+  FileUtils.mkdir(access_log_path) unless FileTest.exists?(access_log_path)
+  Mechanize.log = Logger.new("#{access_log_path}/access_#{Time.now.to_i}.log")
   
   def initialize(options={})
     opts = {url: nil, user_agent: 'Windows Mozilla', wrong_url: [], exclusion_link: [], auth: nil}.merge(options)
