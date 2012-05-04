@@ -63,12 +63,12 @@ class Weblinks
             execute
           end
         rescue => e
-          @app_error_logs << "#{link.uri.to_s} : #{link}   #{e} -----------------------------------------"
+          @app_error_logs << {url: link.uri.to_s, title: link, message: e}
         end
       end
       
-      @app_logs       = @app_logs.sort.uniq
-      @app_error_logs = @app_error_logs.sort.uniq
+      @app_logs       = @app_logs.uniq
+      @app_error_logs = @app_error_logs.uniq
     end
   
     def outer_url?(link)
@@ -88,7 +88,7 @@ class Weblinks
     end
     
     def dump_link
-      @app_logs << "#{@agent.page.uri} : #{@agent.page.title}"
+      @app_logs << {url: @agent.page.uri, title: @agent.page.title}
     end
     
     def white_link_count(links)
@@ -102,13 +102,13 @@ class Weblinks
     def dump_log
       open(File.dirname(__FILE__) + "/log/#{File.basename(__FILE__, '.rb')}.log", 'w') do |file|
         @app_logs.each do |log|
-          file.puts log
+          file.puts "#{log[:url]}: #{log[:title]}"
         end
       end
       
       open(File.dirname(__FILE__) + "/log/#{File.basename(__FILE__, '.rb')}_error.log", 'w') do |file|
         @app_error_logs.each do |log|
-          file.puts log
+          file.puts "#{log[:url]}: #{log[:title]}: #{log[:message]}"
         end
       end
     end
